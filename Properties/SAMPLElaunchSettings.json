@@ -1,0 +1,39 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:59711",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "nkport_api": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5085",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "COSMOS_ENDPOINT": "redacted",
+        "COSMOS_KEY": "redacted",
+        "BLOB_KEY": " redecated",
+        "BLOB_CONNECTION_STRING": "redacted"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "COSMOS_ENDPOINT": "redacted",
+        "COSMOS_KEY": "redacted",
+        "BLOB_KEY": " redecated",
+        "BLOB_CONNECTION_STRING": "redacted"
+      }
+    }
+  }
+}
