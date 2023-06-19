@@ -63,6 +63,13 @@ namespace nkport_api.Controllers
                 return NotFound();
             }
         }
+        [HttpGet("KeepWarm")]
+        public IActionResult KeepWarm()
+        {
+            _logger.LogInformation("Keep Warm request received.");
+            return Ok("Function is warm");
+        }
+
 
         [HttpGet("All")]
         [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
