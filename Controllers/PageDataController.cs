@@ -1,15 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
-using nkport_api;
-using System.Drawing.Drawing2D;
 using Newtonsoft.Json;
-using Microsoft.Azure.Cosmos.Linq;
 using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
 using Azure.Storage;
+using Microsoft.Extensions.Logging;
+using System.Configuration;
 
 //This is a work in progress.
 //TODO:
@@ -63,13 +59,6 @@ namespace nkport_api.Controllers
                 return NotFound();
             }
         }
-        [HttpGet("KeepWarm")]
-        public IActionResult KeepWarm()
-        {
-            _logger.LogInformation("Keep Warm request received.");
-            return Ok("Function is warm");
-        }
-
 
         [HttpGet("All")]
         [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
@@ -94,6 +83,21 @@ namespace nkport_api.Controllers
                 return Ok(pagesList);
             }
             return NotFound();
+        }
+
+        [HttpGet("KeepWarm")]
+        public IActionResult KeepWarm()
+        {
+            //In order to force Azure to keep our resources loaded, we need to interact with the libraries we are using, or at the very least, the libraries that have the highest load times. 
+            //The current cost for our network usage on Azure is .17 cents a month, which is mainly associated with the logic app pinging this method to keep Azure from deallocating our resources. 
+            List<PageData> pagesList = new List<PageData>();
+            QueryDefinition myQuery = new QueryDefinition("SELECT * FROM c");
+            FeedIterator<PageData> resultSet = _container.GetItemQueryIterator<PageData>(myQuery);
+            //We avoid grabbing the results as that step is more computationally heavy and may not be needed to speed up the initial load times. 
+            //What happens right now is that after 20 minutes or so, Azure frees up resources under their free app service plan,
+            //so the website loads slow ONCE for a single user, afterwhich Azure reloads our needed resources, so any subsequent requests will load fast until we have another period of inactivity.  
+            _logger.LogInformation("Keep Warm request received.");
+            return Ok("Function is warm");
         }
 
         //https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview
